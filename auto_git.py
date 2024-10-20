@@ -24,5 +24,5 @@ def git_add_commit_push(commit_message, branch_name='master'):
 if __name__ == "__main__":
     # Example commit message and branch name
     commit_message = "Automated commit message"
-    branch_name = "feature-branch"  # Replace with the name of the branch you want to push to
+    branch_name = "main"  # Replace with the name of the branch you want to push to
     git_add_commit_push(commit_message, branch_name)
