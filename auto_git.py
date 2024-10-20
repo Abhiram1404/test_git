@@ -3,26 +3,29 @@ import subprocess
 def git_add_commit_push(commit_message):
     try:
         # Stage all changes (equivalent to git add .)
-        subprocess.run(["git", "add", "."], check=True)
+        result_add = subprocess.run(["git", "add", "."], check=True)
         
         # Commit with the given message
-        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+        result_commit = subprocess.run(["git", "commit", "-m", commit_message], check=True)
         
         # Push changes to the remote repository (default branch)
-        subprocess.run(["git", "push"], check=True)
+        result_push = subprocess.run(["git", "push"], check=True)
+        
+        print("Changes were added, committed, and pushed successfully.")
         
     except subprocess.CalledProcessError as e:
-        print(f"An error occurred while executing Git commands: {e}")
-        return False  # Indicate failure
-
-    return True  # Indicate success
+        # Handle errors in the subprocess
+        print(f"An error occurred: {e}")
+        if e.returncode == 1:
+            print("Failed to add changes. Make sure there are changes to commit.")
+        elif e.returncode == 2:
+            print("Commit failed. Make sure your commit message is not empty.")
+        elif e.returncode == 128:
+            print("Push failed. Check if remote repository is accessible.")
+        else:
+            print("An unknown error occurred.")
 
 if __name__ == "__main__":
     # Example commit message
     commit_message = "Automated commit message"
-    success = git_add_commit_push(commit_message)
-
-    if not success:
-        print("Failed to add, commit, or push changes.")
-    else:
-        print("Changes were successfully added, committed, and pushed.")
+    git_add_commit_push(commit_message)
